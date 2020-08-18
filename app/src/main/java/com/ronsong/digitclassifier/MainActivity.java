@@ -25,6 +25,8 @@ import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.ml.common.modeldownload.FirebaseModelDownloadConditions;
 import com.google.firebase.ml.common.modeldownload.FirebaseModelManager;
 import com.google.firebase.ml.custom.FirebaseCustomRemoteModel;
+import com.google.firebase.perf.FirebasePerformance;
+import com.google.firebase.perf.metrics.Trace;
 
 import java.io.File;
 
@@ -37,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
     private FloatingActionButton no_button;
     private TextView text_view;
     private DigitClassifier digitClassifier = new DigitClassifier(this);
+    private FirebasePerformance firebasePerformance = FirebasePerformance.getInstance();
 
     @SuppressLint({"ClickableViewAccessibility", "SetTextI18n", "ShowToast"})
     @Override
@@ -133,6 +136,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void downloadModel(String modelName) {
+        final Trace downloadTrace = firebasePerformance.newTrace("download_model");
+        downloadTrace.start();
+
         FirebaseCustomRemoteModel remoteModel = new FirebaseCustomRemoteModel.Builder(modelName).build();
         FirebaseModelDownloadConditions conditions = new FirebaseModelDownloadConditions.Builder()
                 .requireWifi()
@@ -160,6 +166,7 @@ public class MainActivity extends AppCompatActivity {
                                                         }
                                                     });
                                         } else {
+                                            downloadTrace.stop();
                                             toast("Downloaded remote model: " + model.getParentFile().getName());
                                             digitClassifier.initialize(model);
                                         }
@@ -173,11 +180,14 @@ public class MainActivity extends AppCompatActivity {
     private void classifyDrawing() {
         Bitmap bitmap = draw_view.getBitmap();
         if (digitClassifier.isInitialized()) {
+            final Trace classifyTrace = firebasePerformance.newTrace("classify");
+            classifyTrace.start();
             digitClassifier
                     .classifyAsync(bitmap)
                     .addOnSuccessListener(new OnSuccessListener<String>() {
                         @Override
                         public void onSuccess(String resultText) {
+                            classifyTrace.stop();
                             text_view.setText(resultText);
                         }
                     })
@@ -211,6 +221,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void toast(String message) {
-        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 }
