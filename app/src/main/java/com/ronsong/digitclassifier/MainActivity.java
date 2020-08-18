@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,6 +21,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.ml.common.modeldownload.FirebaseModelDownloadConditions;
 import com.google.firebase.ml.common.modeldownload.FirebaseModelManager;
 import com.google.firebase.ml.custom.FirebaseCustomRemoteModel;
@@ -31,6 +33,8 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
     private DrawView draw_view;
     private FloatingActionButton clear_button;
+    private FloatingActionButton yes_button;
+    private FloatingActionButton no_button;
     private TextView text_view;
     private DigitClassifier digitClassifier = new DigitClassifier(this);
 
@@ -39,6 +43,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        yes_button = findViewById(R.id.check_button);
+        no_button = findViewById(R.id.cross_button);
+
+
         draw_view = findViewById(R.id.draw_view);
         draw_view.setStrokeWidth(70f);
         draw_view.setColor(Color.WHITE);
@@ -49,6 +58,8 @@ public class MainActivity extends AppCompatActivity {
                 draw_view.onTouchEvent(motionEvent);
                 if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
                     classifyDrawing();
+                    yes_button.setVisibility(View.VISIBLE);
+                    no_button.setVisibility(View.VISIBLE);
                 }
                 return true;
             }
@@ -56,17 +67,29 @@ public class MainActivity extends AppCompatActivity {
 
         text_view = findViewById(R.id.predicted_text);
 
+        yes_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                log("correct");
+            }
+        });
+
+        no_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                log("incorrect");
+            }
+        });
+
         clear_button = findViewById(R.id.clear_button);
         clear_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                draw_view.clearCanvas();
-                text_view.setText("Please draw a digit");
-                toast("Canvas cleared");
+                refresh();
             }
         });
 
-        FloatingActionButton readMe = findViewById(R.id.readMe_button);
+        ImageView readMe = findViewById(R.id.readMe_button);
         readMe.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -83,6 +106,26 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });*/
         setupDigitClassifier();
+    }
+
+    @SuppressLint("SetTextI18n")
+    private void refresh() {
+        draw_view.clearCanvas();
+        text_view.setText("Please draw a digit");
+        toast("Canvas cleared");
+    }
+
+    @SuppressLint("SetTextI18n")
+    private void log(String input) {
+        Bundle bundle = new Bundle();
+        bundle.putString("user_input", input);
+        FirebaseAnalytics.getInstance(this).logEvent("correct_inference", bundle);
+        toast("Thanks for your input, event logged!");
+
+        draw_view.clearCanvas();
+        text_view.setText("Please draw a digit");
+        yes_button.setVisibility(View.INVISIBLE);
+        no_button.setVisibility(View.INVISIBLE);
     }
 
     private void setupDigitClassifier() {

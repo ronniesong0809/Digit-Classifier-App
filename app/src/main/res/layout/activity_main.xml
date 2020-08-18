@@ -30,37 +30,51 @@
         android:id="@+id/clear_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
-        android:backgroundTint="#D32F2F"
         android:clickable="true"
-        app:backgroundTint="#80D32F2F"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/draw_view"
         app:srcCompat="@drawable/baseline_refresh_24" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/check_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
         android:backgroundTint="#689F38"
         android:clickable="true"
+        android:visibility="invisible"
         app:backgroundTint="#80689F38"
-        app:layout_constraintBottom_toTopOf="@+id/clear_button"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@drawable/baseline_done_24" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/cross_button"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@drawable/baseline_check_24" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/cross_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:backgroundTint="#D32F2F"
+        android:clickable="true"
+        android:visibility="invisible"
+        app:backgroundTint="#80D32F2F"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/check_button"
+        app:srcCompat="@drawable/baseline_close_24" />
+
+    <ImageView
         android:id="@+id/readMe_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
-        android:clickable="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/baseline_help_outline_24" />
+        app:srcCompat="@drawable/baseline_help_outline_24"
+        tools:ignore="MissingConstraints"
+        android:contentDescription="@string/read_me" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
