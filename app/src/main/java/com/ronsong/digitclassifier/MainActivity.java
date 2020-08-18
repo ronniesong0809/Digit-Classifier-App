@@ -86,14 +86,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        FloatingActionButton clear_button = findViewById(R.id.clear_button);
-        clear_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                refresh();
-            }
-        });
-
         ImageView readMe = findViewById(R.id.readMe_button);
         readMe.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -111,13 +103,6 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });*/
         setupDigitClassifier();
-    }
-
-    @SuppressLint("SetTextI18n")
-    private void refresh() {
-        draw_view.clearCanvas();
-        text_view.setText("Please draw a digit");
-        toast("Canvas cleared");
     }
 
     @SuppressLint("SetTextI18n")
