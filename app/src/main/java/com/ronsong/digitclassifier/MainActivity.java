@@ -15,9 +15,16 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.divyanshu.draw.widget.DrawView;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.ml.common.modeldownload.FirebaseModelDownloadConditions;
+import com.google.firebase.ml.common.modeldownload.FirebaseModelManager;
+import com.google.firebase.ml.custom.FirebaseCustomRemoteModel;
+
+import java.io.File;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -67,12 +74,54 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        digitClassifier
+        /*digitClassifier
                 .initialize()
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Log.e(TAG, "Error to setting up digit classifier.", e);
+                    }
+                });*/
+        setupDigitClassifier();
+    }
+
+    private void setupDigitClassifier() {
+        downloadModel("mnist_v1");
+    }
+
+    private void downloadModel(String modelName) {
+        FirebaseCustomRemoteModel remoteModel = new FirebaseCustomRemoteModel.Builder(modelName).build();
+        FirebaseModelDownloadConditions conditions = new FirebaseModelDownloadConditions.Builder()
+                .requireWifi()
+                .build();
+        FirebaseModelManager.getInstance().download(remoteModel, conditions)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        FirebaseCustomRemoteModel remoteModel = new FirebaseCustomRemoteModel.Builder("your_model").build();
+                        FirebaseModelManager.getInstance().getLatestModelFile(remoteModel)
+                                .addOnCompleteListener(new OnCompleteListener<File>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<File> task) {
+                                        File model = task.getResult();
+                                        if (model == null) {
+                                            toast("Failed to get model file.");
+                                            toast("Use local model.");
+                                            digitClassifier
+                                                    .initialize(null)
+                                                    .addOnFailureListener(new OnFailureListener() {
+                                                        @Override
+                                                        public void onFailure(@NonNull Exception e) {
+                                                            Log.e(TAG, "Error to setting up digit classifier.", e);
+                                                            toast("Error to setting up digit classifier.");
+                                                        }
+                                                    });
+                                        } else {
+                                            toast("Downloaded remote model: $model");
+                                            digitClassifier.initialize(model);
+                                        }
+                                    }
+                                });
                     }
                 });
     }

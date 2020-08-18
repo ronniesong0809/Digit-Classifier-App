@@ -41,22 +41,30 @@ class DigitClassifier {
         executorService = Executors.newCachedThreadPool();
     }
 
-    Task<Void> initialize() {
+    Task<Void> initialize(final Object model) {
         return Tasks.call(executorService, new Callable<Void>() {
             @Override
             public Void call() throws Exception {
-                initInterpreter();
+                initInterpreter(model);
                 return null;
             }
         });
     }
 
-    private void initInterpreter() throws IOException {
-        AssetManager assetManager = this.context.getAssets();
-        ByteBuffer model = loadModelFile(assetManager);
+    private void initInterpreter(Object model) throws IOException {
+
         Interpreter.Options options = new Interpreter.Options();
         options.setUseNNAPI(true);
-        Interpreter interpreter = new Interpreter(model, options);
+        Interpreter interpreter;
+        if (model!=null) {
+            interpreter = new Interpreter((ByteBuffer) model, options);
+        } else {
+            AssetManager assetManager = this.context.getAssets();
+            model = loadModelFile(assetManager);
+            interpreter = new Interpreter((ByteBuffer) model, options);
+        }
+
+
         int[] inputShape = interpreter.getInputTensor(0).shape();
         inputImageWidth = inputShape[1];
         inputImageHeight = inputShape[2];
