@@ -11,6 +11,7 @@ import com.google.android.gms.tasks.Tasks;
 
 import org.tensorflow.lite.Interpreter;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -57,7 +58,7 @@ class DigitClassifier {
         options.setUseNNAPI(true);
         Interpreter interpreter;
         if (model!=null) {
-            interpreter = new Interpreter((ByteBuffer) model, options);
+            interpreter = new Interpreter((File) model, options);
         } else {
             AssetManager assetManager = this.context.getAssets();
             model = loadModelFile(assetManager);

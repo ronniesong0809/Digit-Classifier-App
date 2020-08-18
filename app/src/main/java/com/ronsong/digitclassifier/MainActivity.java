@@ -98,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        FirebaseCustomRemoteModel remoteModel = new FirebaseCustomRemoteModel.Builder("your_model").build();
+                        FirebaseCustomRemoteModel remoteModel = new FirebaseCustomRemoteModel.Builder("mnist_v1").build();
                         FirebaseModelManager.getInstance().getLatestModelFile(remoteModel)
                                 .addOnCompleteListener(new OnCompleteListener<File>() {
                                     @Override
@@ -117,7 +117,7 @@ public class MainActivity extends AppCompatActivity {
                                                         }
                                                     });
                                         } else {
-                                            toast("Downloaded remote model: $model");
+                                            toast("Downloaded remote model: " + model.getParentFile().getName());
                                             digitClassifier.initialize(model);
                                         }
                                     }
@@ -168,6 +168,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void toast(String message) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
     }
 }
