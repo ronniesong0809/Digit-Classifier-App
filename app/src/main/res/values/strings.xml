@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">digitclassifier</string>
+    <string name="app_name">Digit Classifier</string>
+    <string name="draw_a_digit">Please draw a digit</string>
 </resources>

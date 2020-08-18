@@ -120,10 +120,9 @@ class DigitClassifier {
         int[] pixels = new int[inputImageWidth * inputImageHeight];
         bitmap.getPixels(pixels, 0, bitmap.getWidth(), 0, 0, bitmap.getWidth(), bitmap.getHeight());
         for (int pixelValue : pixels) {
-            int
-                    r = (pixelValue >> 16) & 0xFF,
-                    g = (pixelValue >> 8) & 0xFF,
-                    b = pixelValue & 0xFF;
+            int r = (pixelValue >> 16) & 0xFF;
+            int g = (pixelValue >> 8) & 0xFF;
+            int b = pixelValue & 0xFF;
             float normalizedPixelValue = (r + g + b) / 3.0f / 255.0f;
             byteBuffer.putFloat(normalizedPixelValue);
         }
@@ -139,7 +138,7 @@ class DigitClassifier {
                 maxIndex = i;
             }
         }
-        return "Prediction Result: " + maxIndex + "\nConfidence: " + max;
+        return "Prediction: " + maxIndex + "\nConfidence: " + max;
     }
 
     boolean isInitialized() {

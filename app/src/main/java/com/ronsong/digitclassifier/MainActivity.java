@@ -1,13 +1,13 @@
 package com.ronsong.digitclassifier;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -17,12 +17,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.divyanshu.draw.widget.DrawView;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
     private DrawView draw_view;
-    private Button clear_button;
+    private FloatingActionButton clear_button;
     private TextView text_view;
     private DigitClassifier digitClassifier = new DigitClassifier(this);
 
@@ -55,6 +56,14 @@ public class MainActivity extends AppCompatActivity {
                 draw_view.clearCanvas();
                 text_view.setText("Please draw a digit");
                 toast("Canvas cleared");
+            }
+        });
+
+        FloatingActionButton readMe = findViewById(R.id.readMe_button);
+        readMe.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ReadMe();
             }
         });
 
@@ -94,6 +103,19 @@ public class MainActivity extends AppCompatActivity {
     protected void onDestroy() {
         digitClassifier.close();
         super.onDestroy();
+    }
+
+    private void ReadMe() {
+        String message = "Copyright (c) 2020 Ronnie Song\n\n";
+        message += "This is a simple Android Digit Classifier that allows its users to drawing a digit, then recognize it.";
+
+        AlertDialog dialog = new AlertDialog.Builder(this)
+                .setIcon(R.drawable.baseline_help_outline_24)
+                .setTitle("README")
+                .setMessage(message)
+                .setNegativeButton("Cancel", null)
+                .create();
+        dialog.show();
     }
 
     private void toast(String message) {
