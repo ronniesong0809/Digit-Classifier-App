@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.channels.FileChannel;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -41,9 +42,12 @@ class DigitClassifier {
     }
 
     Task<Void> initialize() {
-        return Tasks.call(executorService, () -> {
-            initInterpreter();
-            return null;
+        return Tasks.call(executorService, new Callable<Void>() {
+            @Override
+            public Void call() throws Exception {
+                initInterpreter();
+                return null;
+            }
         });
     }
 
@@ -71,8 +75,8 @@ class DigitClassifier {
         return fileChannel.map(FileChannel.MapMode.READ_ONLY, startOffset, declaredLength);
     }
 
-    private String classify(Bitmap bitmap){
-        if(!isInitialized)
+    private String classify(Bitmap bitmap) {
+        if (!isInitialized)
             throw new IllegalStateException("TF Lite Interpreter is not initialized yet.");
         long startTime, elapsedTime;
         startTime = System.nanoTime();
@@ -82,7 +86,7 @@ class DigitClassifier {
         Log.d(TAG, "Pre-processing time = " + elapsedTime + " ms");
 
         startTime = System.nanoTime();
-        float[][] result = { new float[OUTPUT_CLASSES_COUNT] };
+        float[][] result = {new float[OUTPUT_CLASSES_COUNT]};
         interpreter.run(byteBuffer, result);
         elapsedTime = (System.nanoTime() - startTime) / 1_000_000;
         Log.d(TAG, "Inference time = " + elapsedTime + " ms");
@@ -90,15 +94,23 @@ class DigitClassifier {
         return getOutputString(result[0]);
     }
 
-    Task<String> classifyAsync(Bitmap bitmap) {
-        return Tasks.call(executorService, () -> classify(bitmap));
+    Task<String> classifyAsync(final Bitmap bitmap) {
+        return Tasks.call(executorService, new Callable<String>() {
+            @Override
+            public String call() throws Exception {
+                return classify(bitmap);
+            }
+        });
     }
 
-    void close(){
-        Tasks.call(executorService, () -> {
-            interpreter.close();
-            Log.d(TAG, "Closed TF-Lite interpreter.");
-            return null;
+    void close() {
+        Tasks.call(executorService, new Callable<Void>() {
+            @Override
+            public Void call() throws Exception {
+                interpreter.close();
+                Log.d(TAG, "Closed TF-Lite interpreter.");
+                return null;
+            }
         });
     }
 
@@ -107,7 +119,7 @@ class DigitClassifier {
         byteBuffer.order(ByteOrder.nativeOrder());
         int[] pixels = new int[inputImageWidth * inputImageHeight];
         bitmap.getPixels(pixels, 0, bitmap.getWidth(), 0, 0, bitmap.getWidth(), bitmap.getHeight());
-        for(int pixelValue : pixels) {
+        for (int pixelValue : pixels) {
             int
                     r = (pixelValue >> 16) & 0xFF,
                     g = (pixelValue >> 8) & 0xFF,
@@ -118,11 +130,11 @@ class DigitClassifier {
         return byteBuffer;
     }
 
-    private String getOutputString(float[] output){
+    private String getOutputString(float[] output) {
         int maxIndex = -1;
         float max = output[0];
-        for(int i = 0; i < output.length; i++){
-            if(output[i] > max) {
+        for (int i = 0; i < output.length; i++) {
+            if (output[i] > max) {
                 max = output[i];
                 maxIndex = i;
             }
