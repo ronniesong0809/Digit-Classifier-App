@@ -27,6 +27,8 @@ import com.google.firebase.ml.common.modeldownload.FirebaseModelManager;
 import com.google.firebase.ml.custom.FirebaseCustomRemoteModel;
 import com.google.firebase.perf.FirebasePerformance;
 import com.google.firebase.perf.metrics.Trace;
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
+import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 
 import java.io.File;
 
@@ -34,12 +36,12 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
     private DrawView draw_view;
-    private FloatingActionButton clear_button;
     private FloatingActionButton yes_button;
     private FloatingActionButton no_button;
     private TextView text_view;
     private DigitClassifier digitClassifier = new DigitClassifier(this);
     private FirebasePerformance firebasePerformance = FirebasePerformance.getInstance();
+    private FirebaseRemoteConfig firebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
 
     @SuppressLint({"ClickableViewAccessibility", "SetTextI18n", "ShowToast"})
     @Override
@@ -84,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        clear_button = findViewById(R.id.clear_button);
+        FloatingActionButton clear_button = findViewById(R.id.clear_button);
         clear_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -132,10 +134,23 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupDigitClassifier() {
-        downloadModel("mnist_v1");
+        configureRemoteConfig();
+        firebaseRemoteConfig.fetchAndActivate()
+                .addOnCompleteListener(new OnCompleteListener<Boolean>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Boolean> task) {
+                        if (task.isSuccessful()) {
+                            String modelName = firebaseRemoteConfig.getString("model_name");
+                            downloadModel(modelName);
+                            toast("Downloaded remote model: " + modelName);
+                        } else {
+                            toast("Failed to fetch model name");
+                        }
+                    }
+                });
     }
 
-    private void downloadModel(String modelName) {
+    private void downloadModel(final String modelName) {
         final Trace downloadTrace = firebasePerformance.newTrace("download_model");
         downloadTrace.start();
 
@@ -147,7 +162,7 @@ public class MainActivity extends AppCompatActivity {
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        FirebaseCustomRemoteModel remoteModel = new FirebaseCustomRemoteModel.Builder("mnist_v1").build();
+                        FirebaseCustomRemoteModel remoteModel = new FirebaseCustomRemoteModel.Builder(modelName).build();
                         FirebaseModelManager.getInstance().getLatestModelFile(remoteModel)
                                 .addOnCompleteListener(new OnCompleteListener<File>() {
                                     @Override
@@ -167,7 +182,6 @@ public class MainActivity extends AppCompatActivity {
                                                     });
                                         } else {
                                             downloadTrace.stop();
-                                            toast("Downloaded remote model: " + model.getParentFile().getName());
                                             digitClassifier.initialize(model);
                                         }
                                     }
@@ -199,6 +213,15 @@ public class MainActivity extends AppCompatActivity {
                         }
                     });
         }
+    }
+
+    private void configureRemoteConfig() {
+        firebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
+
+        FirebaseRemoteConfigSettings configSettings = new FirebaseRemoteConfigSettings.Builder()
+                .setMinimumFetchIntervalInSeconds(3600)
+                .build();
+        firebaseRemoteConfig.setConfigSettingsAsync(configSettings);
     }
 
     @Override
