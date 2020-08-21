@@ -20,14 +20,14 @@ This project is adapted from the original [Tensorflow digit_classifier](https://
  * Experiment with different models Effectiveness via *Firebase A/B Testing*
  
 ## Sources:
-https://www.tensorflow.org/lite/tutorials
-https://codelabs.developers.google.com/codelabs/digit-classifier-tflite
-https://firebase.google.com/docs/ml/android/use-custom-models
-https://firebase.google.com/docs/ml/manage-hosted-models
-https://firebase.google.com/docs/analytics
-https://firebase.google.com/docs/perf-mon/get-started-android
-https://firebase.google.com/docs/remote-config/use-config-android
-https://firebase.google.com/docs/ab-testing
+* Tensorflow Lite Tutorials: https://www.tensorflow.org/lite/tutorials
+* Build a digit classifier app with TFLite: https://codelabs.developers.google.com/codelabs/digit-classifier-tflite
+* Use a custom TensorFlow Lite model on Android: https://firebase.google.com/docs/ml/android/use-custom-models
+* Deploy and manage custom models: https://firebase.google.com/docs/ml/manage-hosted-models
+* Firebase Analytics: https://firebase.google.com/docs/analytics
+* Firebase Performance Monitoring for Android: https://firebase.google.com/docs/perf-mon/get-started-android
+* Firebase Remote Config on Android: https://firebase.google.com/docs/remote-config/use-config-android
+* Firebase A/B Testing: https://firebase.google.com/docs/ab-testing
 
 ## License
 This program is licensed under the "Apache License". Please see the file LICENSE in the source distribution of this software for license terms.
