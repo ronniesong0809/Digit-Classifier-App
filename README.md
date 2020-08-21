@@ -6,12 +6,11 @@ This is a simple Android Digit Classifier that allows its users to drawing a dig
 
 Demo: [here](https://github.com/ronniesong0809/Digit-Classifier-App/releases/tag/v1.0)
 
-Sample code from [tensorflow digit_classifier tutorial](https://github.com/tensorflow/examples/blob/master/lite/codelabs/digit_classifier/README.md).
-
+This project is adapted from the original [Tensorflow digit_classifier](https://github.com/tensorflow/examples/blob/master/lite/codelabs/digit_classifier/README.md), then convert from Koltin to Java.
 
 ## Goals
- * Create Android interface that takes user input
  * Experience the difference between Java and Kotlin in Android
+ * Create Android interface that takes user input
  * Train models on mnist with Keras in Google Colab and then converting them into TFLIte format
  * Deploy a static TFLite model to Android app
  * Deploy TFLite models dynamically served from *Firebase ML* to Android app
@@ -21,7 +20,14 @@ Sample code from [tensorflow digit_classifier tutorial](https://github.com/tenso
  * Experiment with different models Effectiveness via *Firebase A/B Testing*
  
 ## Sources:
+https://www.tensorflow.org/lite/tutorials
 https://codelabs.developers.google.com/codelabs/digit-classifier-tflite
+https://firebase.google.com/docs/ml/android/use-custom-models
+https://firebase.google.com/docs/ml/manage-hosted-models
+https://firebase.google.com/docs/analytics
+https://firebase.google.com/docs/perf-mon/get-started-android
+https://firebase.google.com/docs/remote-config/use-config-android
+https://firebase.google.com/docs/ab-testing
 
 ## License
 This program is licensed under the "Apache License". Please see the file LICENSE in the source distribution of this software for license terms.
