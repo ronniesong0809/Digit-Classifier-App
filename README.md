@@ -1,4 +1,6 @@
 # Digit Classifier
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fronniesong0809%2FDigit-Classifier-App.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fronniesong0809%2FDigit-Classifier-App?ref=badge_shield)
+
 
 Copyright (c) 2019 Ronnie Song
 
@@ -31,3 +33,6 @@ This project is adapted from the original [Tensorflow digit_classifier](https://
 
 ## License
 This program is licensed under the "Apache License". Please see the file LICENSE in the source distribution of this software for license terms.
+
+
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fronniesong0809%2FDigit-Classifier-App.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fronniesong0809%2FDigit-Classifier-App?ref=badge_large)
