@@ -1,5 +1,7 @@
 # Digit Classifier
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/fa3bc0fdcedd4003a03f6f37049b4031)](https://app.codacy.com/manual/ronsong/Digit-Classifier-App?utm_source=github.com&utm_medium=referral&utm_content=ronniesong0809/Digit-Classifier-App&utm_campaign=Badge_Grade_Dashboard)
+
 Copyright (c) 2019 Ronnie Song
 
 This is a simple Android Digit Classifier that allows its users to drawing a digit, then recognize it using the TFLite File. 
