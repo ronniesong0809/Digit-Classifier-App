@@ -9,7 +9,7 @@ Copyright (c) 2019 Ronnie Song
 
 This is a simple Android Digit Classifier that allows its users to drawing a digit, then recognize it using the TFLite File.
 
-Demo: [here](https://github.com/ronniesong0809/Digit-Classifier-App/releases/tag/v1.0)
+Download: [demo](https://github.com/ronniesong0809/Digit-Classifier-App/releases/download/v1.0/digit-classifier-1.0.apk)
 
 This project is adapted from the original [Tensorflow digit_classifier](https://github.com/tensorflow/examples/blob/master/lite/codelabs/digit_classifier/README.md), then convert from Koltin to Java.
 
